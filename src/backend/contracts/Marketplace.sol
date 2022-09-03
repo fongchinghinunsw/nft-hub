@@ -2,13 +2,10 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-
 import "hardhat/console.sol";
 
 contract Marketplace is ReentrancyGuard {
-    // Variables
     address payable public immutable feeAccount; // the account that receives fees
     uint256 public immutable feePercent; // the fee percentage on sales
     uint256 public itemCount;
@@ -22,7 +19,6 @@ contract Marketplace is ReentrancyGuard {
         bool sold;
     }
 
-    // itemId -> Item
     mapping(uint256 => Item) public items;
 
     event Offered(
@@ -32,6 +28,7 @@ contract Marketplace is ReentrancyGuard {
         uint256 price,
         address indexed seller
     );
+
     event Bought(
         uint256 itemId,
         address indexed nft,
@@ -55,7 +52,7 @@ contract Marketplace is ReentrancyGuard {
         require(_price > 0, "Price must be greater than zero");
         // increment itemCount
         itemCount++;
-        // transfer nft
+        // transfer nft to the marketplace
         _nft.transferFrom(msg.sender, address(this), _tokenId);
         // add new item to items mapping
         items[itemCount] = Item(
